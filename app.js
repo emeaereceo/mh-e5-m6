@@ -6,8 +6,8 @@ const argv = yargs(hideBin(process.argv));
 
 const cargarTareas = () => {
   try {
-    const dataBuffer = fs.readFileSync("tareas.json");
-    return JSON.parse(dataBuffer.toString());
+    const leerArchivo = fs.readFileSync("tareas.json");
+    return JSON.parse(leerArchivo.toString());
   } catch (error) {
     return [];
   }
@@ -35,6 +35,26 @@ argv.command({
       console.log(`Tarea "${argv.titulo}" creada correctamente.`);
     } catch (error) {
       console.error("Error al crear la tarea.");
+    }
+  },
+});
+
+argv.command({
+  command: "listar",
+  describe: "Lista todas las tareas",
+  handler() {
+    try {
+      const tareas = cargarTareas();
+
+      if (tareas.length === 0) {
+        console.log("No hay tareas.");
+        return;
+      }
+
+      console.log("Tus tareas:\n");
+      tareas.forEach((t, i) => console.log(`${i + 1}. ${t.titulo}`));
+    } catch {
+      console.error("Error al listar.");
     }
   },
 });
